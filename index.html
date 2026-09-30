@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Paper 1 Quiz - Session 2</title>
+<style>
+  :root {
+    --bg: #f4f5f7; --card: #ffffff; --text: #1d1f23; --muted: #6b7078;
+    --line: #e2e4e8; --ok: #1f8a4c; --ok-bg: #e7f6ed; --bad: #c0392b; --bad-bg: #fdecea;
+    --accent: #2457c5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #121316; --card: #1c1e22; --text: #eceef1; --muted: #9aa0a8;
+      --line: #2c2f35; --ok: #4cc47f; --ok-bg: #16301f; --bad: #ff7a6b; --bad-bg: #3a1c19;
+      --accent: #7aa2ff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 16px 64px; }
+  header { position: sticky; top: 0; z-index: 5; background: var(--bg);
+           padding: 12px 0; border-bottom: 1px solid var(--line); margin-bottom: 16px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  .sub { color: var(--muted); font-size: .9rem; margin: 0 0 12px; }
+  .bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  button { font: inherit; border: 1px solid var(--line); background: var(--card); color: var(--text);
+           padding: 8px 14px; border-radius: 8px; cursor: pointer; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .score { margin-left: auto; font-weight: 600; }
+  h2 { font-size: 1rem; color: var(--muted); margin: 28px 0 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .q { background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+       padding: 16px 18px; margin-bottom: 12px; }
+  .qn { font-weight: 700; font-size: .9rem; color: var(--muted); margin-bottom: 4px; }
+  .qt { margin: 0 0 12px; font-size: 1.05rem; }
+  label { display: flex; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 8px;
+          border: 1px solid transparent; cursor: pointer; }
+  label + label { margin-top: 4px; }
+  input[type=radio] { width: 18px; height: 18px; margin: 0; accent-color: var(--ok); flex: none; }
+  label.correct { background: var(--ok-bg); border-color: var(--ok); color: var(--ok); font-weight: 600; }
+  label.wrong { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+  label .tag { margin-left: auto; font-size: .8rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Paper 1 — Quiz (Session 2)</h1>
+    <p class="sub">Answer all 30 questions, then press <b>Submit</b> to see your score.</p>
+    <div class="bar">
+      <button id="submitBtn" class="primary">Submit</button>
+      <button id="restartBtn">Restart</button>
+      <span class="score" id="score"></span>
+    </div>
+  </header>
+  <main id="quiz"></main>
+  <div class="bar" style="margin-top:20px">
+    <button id="submitBtn2" class="primary">Submit</button>
+  </div>
+</div>
+
+<script>
+const TF = ["True", "False"];
+const QUESTIONS = [
+  // Section A
+  { s: "A", q: "Workers have the right to ask about their salary.", o: TF, a: 0 },
+  { s: "A", q: "It is not necessary to respect your manager or colleagues.", o: TF, a: 1 },
+  { s: "A", q: "Good communication includes listening carefully and speaking politely.", o: TF, a: 0 },
+  { s: "A", q: "Workers should inform their employer if they cannot come to work.", o: TF, a: 0 },
+  { s: "A", q: "Being on time at work is very important in Malta.", o: TF, a: 0 },
+  { s: "A", q: "Employees should keep personal hygiene at a good standard.", o: TF, a: 0 },
+  { s: "A", q: "Following workplace rules helps keep everyone safe.", o: TF, a: 0 },
+  { s: "A", q: "Wearing clean clothes at work is part of professional behaviour.", o: TF, a: 0 },
+  { s: "A", q: "Waste collection rules are the same for all local councils in Malta.", o: TF, a: 1 },
+  { s: "A", q: "Workers should respect people from different cultures and backgrounds.", o: TF, a: 0 },
+  { s: "A", q: "You must work seven days a week with no weekly rest.", o: TF, a: 1 },
+  { s: "A", q: "Workers have the right to safe working conditions.", o: TF, a: 0 },
+  { s: "A", q: "Professional conduct includes being polite and cooperative.", o: TF, a: 0 },
+  { s: "A", q: "It is acceptable to ignore safety signs at work.", o: TF, a: 1 },
+  { s: "A", q: "Workers should treat customers with respect and politeness.", o: TF, a: 0 },
+  { s: "A", q: "Teamwork is not important in hotels or restaurants.", o: TF, a: 1 },
+  { s: "A", q: "It is okay to work without knowing your working hours.", o: TF, a: 1 },
+  { s: "A", q: "Arriving late to work without a reason can cause problems at work", o: TF, a: 0 },
+  { s: "A", q: "It is okay to hide mistakes from your supervisor.", o: TF, a: 1 },
+  { s: "A", q: "Employers in Malta are allowed to take your payslips back after showing them to you.", o: TF, a: 1 },
+  // Section B
+  { s: "B", q: "Why should workers respect diversity?",
+    o: ["Create conflict", "Create a positive workplace", "Avoid teamwork", "Choose friends only"], a: 1 },
+  { s: "B", q: "What should you do before starting a new task?",
+    o: ["Guess", "Ask if unsure", "Ignore instructions", "Leave early"], a: 1 },
+  { s: "B", q: "What does teamwork mean in Malta?",
+    o: ["Working alone", "Competing with colleagues", "Listening, sharing ideas, and helping each other",
+        "Only helping your friends"], a: 2 },
+  { s: "B", q: "What should you do if a colleague needs help?",
+    o: ["Ignore", "Help if possible", "Laugh", "Report"], a: 1 },
+  { s: "B", q: "If your employer keeps your passport, this is:",
+    o: ["Normal in Malta", "A sign of possible exploitation", "Required by Jobsplus", "Only for new workers"], a: 1 },
+  { s: "B", q: "How must salaries be paid in Malta?",
+    o: ["Cash", "Bank transfer or electronic payment", "Cheque only", "In vouchers"], a: 1 },
+  { s: "B", q: "In hygiene-related jobs like catering or healthcare, you should:",
+    o: ["Ignore safety rules", "Avoid washing hands too often",
+        "Follow hygiene rules and wear protective equipment", "Use your own clothes only"], a: 2 },
+  { s: "B", q: "What is the minimum weekly wage in Malta for workers aged 18+ in 2025?",
+    o: ["€100", "€500", "€221.78", "€961"], a: 2 },
+  { s: "B", q: "Who usually gives instructions at work in Malta?",
+    o: ["The manager or supervisor", "The customers", "The neighbours", "The bus driver"], a: 0 },
+  { s: "B", q: "What should you do if rules change?",
+    o: ["Ignore", "Learn and follow", "Complain", "Leave"], a: 1 },
+];
+
+const root = document.getElementById("quiz");
+const scoreEl = document.getElementById("score");
+let submitted = false;
+
+function render() {
+  root.innerHTML = "";
+  let section = null;
+  QUESTIONS.forEach((item, i) => {
+    if (item.s !== section) {
+      section = item.s;
+      const h = document.createElement("h2");
+      h.textContent = "Section " + section;
+      root.appendChild(h);
+    }
+    const card = document.createElement("div");
+    card.className = "q";
+    card.id = "card" + i;
+    card.innerHTML = `<div class="qn">Question ${i + 1}</div><p class="qt"></p>`;
+    card.querySelector(".qt").textContent = item.q;
+    item.o.forEach((opt, j) => {
+      const label = document.createElement("label");
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = "q" + i;
+      input.value = j;
+      input.addEventListener("change", updateProgress);
+      const span = document.createElement("span");
+      span.textContent = opt;
+      const tag = document.createElement("span");
+      tag.className = "tag";
+      label.append(input, span, tag);
+      card.appendChild(label);
+    });
+    root.appendChild(card);
+  });
+}
+
+function answeredCount() {
+  return document.querySelectorAll("#quiz input:checked").length;
+}
+
+function updateProgress() {
+  if (!submitted) scoreEl.textContent = `Answered: ${answeredCount()} / ${QUESTIONS.length}`;
+}
+
+function submit() {
+  if (submitted) return;
+  const left = QUESTIONS.length - answeredCount();
+  if (left > 0 && !confirm(`You have ${left} unanswered question(s). Submit anyway?`)) return;
+  submitted = true;
+  let right = 0;
+  QUESTIONS.forEach((item, i) => {
+    const radios = document.querySelectorAll(`input[name=q${i}]`);
+    radios.forEach((r, j) => {
+      r.disabled = true;
+      const label = r.parentElement;
+      if (j === item.a) {
+        label.classList.add("correct");
+        label.querySelector(".tag").textContent = r.checked ? "✓ Your answer" : "✓ Correct answer";
+      } else if (r.checked) {
+        label.classList.add("wrong");
+        label.querySelector(".tag").textContent = "✗ Your answer";
+      }
+    });
+    const picked = document.querySelector(`input[name=q${i}]:checked`);
+    if (picked && +picked.value === item.a) right++;
+  });
+  const pct = Math.round((right / QUESTIONS.length) * 100);
+  scoreEl.textContent = `Score: ${right} / ${QUESTIONS.length} (${pct}%)`;
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function restart() {
+  submitted = false;
+  render();
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+document.getElementById("submitBtn").addEventListener("click", submit);
+document.getElementById("submitBtn2").addEventListener("click", submit);
+document.getElementById("restartBtn").addEventListener("click", restart);
+restart();
+</script>
+</body>
+</html>
